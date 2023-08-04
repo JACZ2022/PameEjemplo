@@ -20,7 +20,7 @@ class Extranjero(models.Model):
     
     
 class OficioPuestaDisposicionINM(models.Model):
-    numeroOficio = models.IntegerField()
+    numeroOficio = models.CharField(max_length=50)
     fechaOficio = models.DateField()
     nombreAutoridadSigna = models.CharField(max_length=100)
     cargoAutoridadSigna = models.CharField(max_length=100)
@@ -30,7 +30,7 @@ class OficioPuestaDisposicionINM(models.Model):
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
      
 class OficioPuestaDisposicionAC(models.Model):
-    numeroOficio = models.IntegerField()
+    numeroOficio = models.CharField(max_length=50)
     fechaOficio = models.DateField()
     dependencia = models.CharField(max_length=100)
     numeroCarpeta = models.CharField(max_length=30)
@@ -41,7 +41,25 @@ class OficioPuestaDisposicionAC(models.Model):
     certificadoMedico = models.BinaryField()
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
     
+class OficioPuestaDisposicionTraslado(models.Model):
+    numeroOficio = models.CharField(max_length=50)
+    fechaOficio = models.DateField()
+    nombreAutoridadSigna = models.CharField(max_length=100)
+    cargoAutoridadSigna = models.CharField(max_length=100)
+    estacionOrigen = models.CharField(max_length=100)
+    oficioPuesta =models.BinaryField()
+    oficioComision = models.BinaryField()
+    delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
 
+class OficioPuestaDisposicionHospedaje(models.Model):
+    numeroOficio = models.CharField(max_length=50)
+    fechaOficio = models.DateField()
+    nombreAutoridadSigna = models.CharField(max_length=100)
+    cargoAutoridadSigna = models.CharField(max_length=100)
+    estacionOrigen = models.CharField(max_length=100)
+    oficioPuesta =models.BinaryField()
+    oficioComision = models.BinaryField()
+    delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
 
 class Acompanante(models.Model):
     delExtranjero = models.IntegerField()
