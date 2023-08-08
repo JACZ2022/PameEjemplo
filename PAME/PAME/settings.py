@@ -50,7 +50,10 @@ INSTALLED_APPS = [
     'Usuarios',
     'Generales',
     'vigilancia',
-    'Pertenencias'
+    'Pertenencias',
+    'EnseresBasicos',
+    'LlamadasTelefonicas',
+    
 ]
 
 MIDDLEWARE = [
