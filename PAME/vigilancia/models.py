@@ -1,5 +1,5 @@
 from django.db import models
-from Generales.models import EstacionMigratoria
+from Catalogos.models import Estacion
 
 
 
@@ -18,7 +18,7 @@ class PuestaDisposicion(models.Model):
     cargoAutoridadSigna = models.CharField(max_length=100)
     oficioPuesta = models.BinaryField()
     oficioComision = models.BinaryField()
-    deLaEstacion = models.ForeignKey(EstacionMigratoria, on_delete=models.CASCADE)
+    deLaEstacion = models.ForeignKey(Estacion, on_delete=models.CASCADE)
     deLadisposicion = models.ForeignKey(TipoDisposicion, on_delete=models.CASCADE)
    
 
@@ -38,6 +38,7 @@ class Extranjero(models.Model):
     documentoIdentidad = models.BinaryField()
     fotografiaExtranjero = models.BinaryField()
     viajaSolo = models.BooleanField()
+    voluntadPropia = models.BooleanField()
     tipoEstancia = models.CharField(max_length=50)
     deLaPuesta = models.ForeignKey(PuestaDisposicion, on_delete= models.CASCADE)
     
