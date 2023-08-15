@@ -8,6 +8,9 @@ class llamadaTelefonica(models.Model):
     deseaLlamar = models.BooleanField()
     motivoNoLlamada =  models.TextField()
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
+    firmaExtranjero = models.CharField(max_length=100)
+    huellaExtranjero = models.CharField(max_length=100)
+    
     
     
 # Create your models here.

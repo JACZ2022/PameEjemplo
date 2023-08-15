@@ -1,12 +1,16 @@
 from django.db import models
 from vigilancia.models import Extranjero
 
+class ExpedienteMedico(models.Model):
+    ServicioMedicoExterno = models.CharField(max_length=100)
+    delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
+
 
 class Consulta(models.Model):
     unidadMigratoria = models.CharField(max_length=50)
     fechaConsulta = models.DateField()
     horaConsulta = models.DateTimeField()
-    delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
+    delExpedienteMedico = models.ForeignKey(ExpedienteMedico, on_delete=models.CASCADE)
     
 
 class PerfilMedico(models.Model):
@@ -71,14 +75,27 @@ class CertificadoMedico(models.Model):
     delaConsulta = models.ForeignKey(Consulta, on_delete=models.CASCADE)
     
 class RecetaMedica(models.Model):
-    UnidadMigratoria = models.CharField(max_length=50)
-    fechaReceta = models.DateField()
-    horaReceta = models.CharField(max_length=50)
+    diagnostico = models.TextField()
     delaConsulta = models.ForeignKey(Consulta, on_delete=models.CASCADE)
-       
+
+class detalleTratmiento(models.Model):
+    dosis = models.IntegerField()
+    unidad = models.CharField(max_length=50)
+    nombreMedicamento = models.CharField(max_length=50)
+    descipcion = models.CharField(max_length=100)
+    delaReceta = models.ForeignKey(RecetaMedica, on_delete=models.CASCADE)
+
+
 class CertificadoMedicoEgreso(models.Model):
     UnidadMigratoria = models.CharField(max_length=50)
-    fechaCertificadoEgerso = models.DateField()
+    fechaCertificadoEgreso = models.DateField()
     horaCertificadoEgreso= models.CharField(max_length=50)
     delaConsulta = models.ForeignKey(Consulta, on_delete=models.CASCADE)
+    
+class ReferenciaMedica(models.Model):
+    diagnostico = models.TextField()
+    unidadMedica = models.TextField()
+    documentoAtencionExterna = models.CharField(max_length=100)
+    delaConsulta = models.ForeignKey(Consulta, on_delete=models.CASCADE)
+    
 # Create your models here.

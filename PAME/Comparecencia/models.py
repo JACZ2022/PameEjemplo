@@ -37,16 +37,16 @@ class Refugio(models.Model):
     notificacionComar= models.TextField()
     fechaNotificacion= models.DateField()
     delExtranjero= models.ForeignKey(Extranjero, on_delete=models.CASCADE)
-    contstanciaAdmisnion = models.BinaryField()
-    acuerdoSuspension = models.BinaryField()
+    contstanciaAdmisnion = models.CharField(max_length=100)
+    acuerdoSuspension = models.CharField(max_length=100)
         
 class VictimaDelito(models.Model):
     notificacionAutoridad = models.TextField()
     fechaNotificacion= models.DateField()
     delExtranjero= models.ForeignKey(Extranjero, on_delete=models.CASCADE)
-    documentoMigratorio = models.BinaryField()
-    asunto = models.BinaryField()
-    documentoFGR = models.BinaryField()
+    documentoMigratorio = models.CharField(max_length=100)
+    asunto = models.TextField()
+    documentoFGR = models.CharField(max_length=100)
 
 class Consular(models.Model):
     lugar= models.CharField(max_length=50)
@@ -56,7 +56,7 @@ class Consular(models.Model):
     tipoResolucion = models.CharField(max_length=50)
     delExtranjero= models.ForeignKey(Extranjero, on_delete=models.CASCADE)
     numeroOficio = models.CharField(max_length=50)
-    asunto = models.BinaryField() 
+    asunto = models.TextField() 
     
 
     

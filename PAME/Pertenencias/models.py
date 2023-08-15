@@ -7,6 +7,8 @@ class Inventario(models.Model):
     fechaEntrega = models.DateField()
     horaEntrega = models.DateTimeField()
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
+    firmaExtranjero = models.CharField(max_length=100)
+    huellaExtranjero = models.CharField(max_length=100)
 
 class Pertenencias(models.Model):
     descripcion = models.DateField(max_length=100)

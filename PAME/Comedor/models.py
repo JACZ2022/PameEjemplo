@@ -14,14 +14,14 @@ class Comedor(models.Model):
     comida = models.BooleanField()
     desayuno = models.BooleanField()
     cena = models.BooleanField()
-    firmaExtranjero = models.BinaryField()
-    huellaExtranjero = models.BinaryField()
+    firmaExtranjero = models.CharField(max_length=100)
+    huellaExtranjero = models.CharField(max_length=100)
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
     
 
 class BoxLunch(models.Model):
     fechaEvento = models.DateField()
     horaEvento = models.DateTimeField
-    firmaResponsable = models.BinaryField()
-    huellaResponsable=models.BinaryField()
+    firmaResponsable = models.CharField(max_length=100)
+    huellaResponsable=models.CharField(max_length=100)
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)

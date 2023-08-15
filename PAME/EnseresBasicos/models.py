@@ -10,6 +10,8 @@ class EnseresBasicos(models.Model):
     panialDesechable = models.BooleanField()
     toallaSanitaria = models.BooleanField()
     colchoneta = models.BooleanField()
-    mantaTermica = models,models.BooleanField()
+    mantaTermica = models.BooleanField()
+    huellaExtranjero = models.CharField(max_length=100)
+    firmaExtranjero = models.CharField(max_length=100)
     delExtranjero = models.ForeignKey(Extranjero, models.CASCADE)
  # Create your models here.
