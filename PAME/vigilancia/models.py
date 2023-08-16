@@ -1,6 +1,6 @@
 from tabnanny import verbose
 from django.db import models
-from catalogos.models import Estacion
+from catalogos.models import Estacion, Responsable
 
 class Nacionalidad(models.Model):
     nombre = models.CharField(max_length=200,verbose_name='Nacionalidad')
@@ -118,3 +118,7 @@ class Biometrico(models.Model):
     class Meta:
         verbose_name_plural = "Biometricos"
         
+    class Proceso(models.Model):
+        numeroUnicoProceso = models.IntegerField()
+        delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
+        delResponsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
