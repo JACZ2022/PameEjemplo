@@ -1,6 +1,6 @@
 from tabnanny import verbose
 from django.db import models
-from catalogos.models import Estacion, Responsable
+from Catalogos.models import Estacion, Responsable, Salida, Estancia, Relacion 
 
 class Nacionalidad(models.Model):
     nombre = models.CharField(max_length=200,verbose_name='Nacionalidad')
@@ -63,6 +63,12 @@ OPCION_GENERO_CHOICES=[
     [0,'HOMBRE'],
     [1,'MUJER'],
 ]
+
+OPCION_ESTATUS_CHOICES=[
+    [0,'ACTIVO'],
+    [1,'INACTIVO'],
+]
+
 class Extranjero(models.Model):
     fechaRegistro = models.DateField(auto_now_add=True)
     horaRegistro = models.DateTimeField(auto_now_add=True)
@@ -76,7 +82,9 @@ class Extranjero(models.Model):
     fechaNacimiento = models.DateField()
     documentoIdentidad = models.FileField(upload_to='files/',  null=True,blank=True)
     viajaSolo = models.BooleanField()
-    tipoEstancia = models.CharField(max_length=50, blank=True)
+    tipoSalida = models.ForeignKey(Salida, on_delete=models.CASCADE)
+    tipoEstancia = models.ForeignKey(Estancia, on_delete=models.CASCADE)
+    Estatus = models.IntegerField(choices=OPCION_ESTATUS_CHOICES)
     deLaPuestaIMN = models.ForeignKey(PuestaDisposicionINM, on_delete= models.CASCADE,blank=True, null=True, related_name='extranjeros',verbose_name='Puesta')
     deLaPuestaAC = models.ForeignKey(PuestaDisposicionAC, on_delete= models.CASCADE,blank=True, null=True, related_name='extranjeros', verbose_name='Puesta')
 
@@ -86,17 +94,11 @@ class Extranjero(models.Model):
     #     return self.numeroExtranjero, self.estacionMigratoria, self.nombreExtranjero
     
     
-OPCION_RELACION_CHOICES=[
-    [0,'ESPOSO(A)'],
-    [1,'HIJO(A)'],
-    [2,'MADRE'],
-    [3,'PADRE'],
-    [4,'OTRO'],
-]
+
 class Acompanante(models.Model):
     delExtranjero = models.IntegerField()
     delAcompanante = models.ForeignKey(Extranjero, on_delete=models.CASCADE, blank=True, null=True)
-    relacion = models.IntegerField(choices=OPCION_RELACION_CHOICES)
+    relacion = models.ForeignKey(Relacion, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Acompañantes"
@@ -105,15 +107,18 @@ class Biometrico(models.Model):
     Extranjero = models.OneToOneField(
         Extranjero,
         on_delete=models.CASCADE,
-        primary_key=True,
+       
     )
     fotografiaExtranjero = models.FileField(upload_to='files/',  null=True,blank=True)
-    fechaHoraFotografia = models.DateTimeField()
+    fechaHoraFotoCreate = models.DateTimeField()
+    fechaHoraFotoUpdate = models.DateTimeField()
+    
     huellaExtranjero = models.FileField(upload_to='files/',  null=True,blank=True)
-    fechaHorauHuella = models.DateTimeField()
+    fechaHoraHuellaCreate = models.DateTimeField()
+    fechaHoraHuellaUpdate = models.DateTimeField()
     firmaExtranjero = models.FileField(upload_to='files/', null=True, blank=True)
-    fechaHoraFirma = models.DateTimeField()
-
+    fechaHoraFirmaCreate = models.DateTimeField()
+    fechaHoraFirmaUpdate = models.DateTimeField()
 
     class Meta:
         verbose_name_plural = "Biometricos"

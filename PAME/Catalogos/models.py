@@ -57,4 +57,14 @@ class Estacion(models.Model):
     
     class Meta:
         verbose_name_plural = "Estaciones"
+class Salida(models.Model):
+    tipoSalida = models.CharField(max_length=50)
+    
+class Estancia(models.Model):
+    tipoEstancia = models.CharField(max_length=50)
+    
+class Relacion(models.Model):
+    tipoRelacion = models.CharField(max_length=50)
+    
+
     
