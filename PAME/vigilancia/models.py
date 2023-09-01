@@ -1,6 +1,6 @@
 from tabnanny import verbose
 from django.db import models
-from Catalogos.models import Estacion, Responsable, Salida, Estancia, Relacion 
+from catalogos.models import Estacion, Responsable, Salida, Estancia, Relacion 
 
 class Nacionalidad(models.Model):
     nombre = models.CharField(max_length=200,verbose_name='Nacionalidad')
@@ -57,7 +57,11 @@ class PuestaDisposicionAC(models.Model):
     def __str__(self):
         return str(self.numeroOficio) 
     
-    
+class PuestaDisposicionVP(models.Model):
+    numeroOficio = models.CharField(max_length=50)
+    fechaOficio = models.DateField()
+    deLaEstacion = models.ForeignKey(Estacion, on_delete=models.CASCADE, verbose_name="Estación de origen", null=True, blank=True)
+
 
 OPCION_GENERO_CHOICES=[
     [0,'HOMBRE'],
@@ -87,6 +91,7 @@ class Extranjero(models.Model):
     Estatus = models.IntegerField(choices=OPCION_ESTATUS_CHOICES)
     deLaPuestaIMN = models.ForeignKey(PuestaDisposicionINM, on_delete= models.CASCADE,blank=True, null=True, related_name='extranjeros',verbose_name='Puesta')
     deLaPuestaAC = models.ForeignKey(PuestaDisposicionAC, on_delete= models.CASCADE,blank=True, null=True, related_name='extranjeros', verbose_name='Puesta')
+    deLaPuestaVP = models.ForeignKey(PuestaDisposicionVP, on_delete= models.CASCADE,blank=True, null=True, related_name='extranjeros', verbose_name='Puesta')
 
     class Meta:
         verbose_name_plural = "Extranjeros" 
@@ -127,3 +132,4 @@ class Biometrico(models.Model):
         numeroUnicoProceso = models.IntegerField()
         delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
         delResponsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
+
