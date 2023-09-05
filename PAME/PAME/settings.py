@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'Pertenencias',
     'EnseresBasicos',
     'LlamadasTelefonicas',
+    'traslado'
     
 ]
 
