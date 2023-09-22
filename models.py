@@ -1,10 +1,10 @@
+from tabnanny import verbose
 from django.db import models
-from catalogos.models import Estacion, Responsable, Salida, Estancia, Relacion
+from catalogos.models import Estacion, Responsable, Salida, Estancia, Relacion 
 from PIL import Image, ExifTags
 
-
 class Nacionalidad(models.Model):
-    nombre = models.CharField(max_length=200,verbose_name='País')
+    nombre = models.CharField(max_length=200,verbose_name='Nacionalidad')
     Abreviatura = models.CharField(max_length=200,verbose_name='Abreviatura')
     
     class Meta:
@@ -57,7 +57,7 @@ class PuestaDisposicionAC(models.Model):
         verbose_name_plural = "Puestas a Disposicion AC"
     
     def __str__(self):
-        return str(self.numeroOficio) 
+        return str(self.numeroOficio)
     
 class PuestaDisposicionVP(models.Model):
     numeroOficio = models.CharField(max_length=50, verbose_name='Numero de Oficio')
@@ -97,6 +97,7 @@ class Extranjero(models.Model):
     deLaPuestaAC = models.ForeignKey(PuestaDisposicionAC, on_delete=models.CASCADE, blank=True, null=True, related_name='extranjeros', verbose_name='Puesta AC')
     deLaPuestaVP = models.ForeignKey(PuestaDisposicionVP, on_delete=models.CASCADE, blank=True, null=True, related_name='extranjeros', verbose_name='Puesta VP')
 
+
     class Meta:
         verbose_name_plural = "Extranjeros" 
     def __str__(self):
@@ -108,7 +109,25 @@ class Extranjero(models.Model):
             self.deLaEstacion.capacidad += 1
             self.deLaEstacion.save()
         super().delete(*args, **kwargs)
-        
+    
+class descripcion(models.Model):
+    delExtranjero = models.OneToOneField(
+        Extranjero, on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    estatura = models.DecimalField()
+    cejas = models.CharField(max_length=50)
+    nariz = models.CharField(max_length=50)
+    labios = models.CharField(max_length=50)
+    tipoCabello = models.CharField(max_length=50)
+    bigote = models.CharField(max_length=50)
+    complexion = models.CharField(max_length=50)
+    frente = models.CharField(max_length=50)
+    colorOjos=models.CharField(max_length=50)
+    boca = models.CharField(max_length=50)
+    segnasParticulares = models.CharField(max_length=50)
+    observaciones = models.CharField(max_length=50)   
+
 class Acompanante(models.Model):
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE, blank=True, null=True, related_name='acompanantes_delExtranjero')
     delAcompanante = models.ForeignKey(Extranjero, on_delete=models.CASCADE, blank=True, null=True, related_name='acompanantes_delAcompanante')
@@ -119,6 +138,7 @@ class Acompanante(models.Model):
 
     class Meta:
         verbose_name_plural = "Acompañantes"
+
 
 class Biometrico(models.Model):
     Extranjero = models.OneToOneField(
@@ -141,8 +161,15 @@ class Biometrico(models.Model):
 
     class Meta:
         verbose_name_plural = 'Biometricos'
-
+        
 class Proceso(models.Model):
-    numeroUnicoProceso = models.CharField(max_length=50)
+    agno = models.IntegerField()
+    estacionInicio = models.CharField(max_length=50)
+    estacionFinal = models.ForeignKey(Estacion, on_delete=models.CASCADE)
+    fechaInicio = models.DateField()
+    fechaFinal = models.DateField()
+    numeroUnicoProceso = models.IntegerField()
+    carpeta = models.CharField(max_length=100)
     delExtranjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
-    delResponsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
+  
+ 
