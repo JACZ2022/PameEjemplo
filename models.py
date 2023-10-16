@@ -1,102 +1,46 @@
 from django.db import models
-
+from vigilancia.models import Extranjero
+from catalogos.models import Estacion, Responsable, AutoridadActuante
 
 # Create your models here.
-class Tipos(models.Model):
-    tipo = models.CharField(max_length=50, null=False)
+class TipoResolucion(models.Model):
+    tipoResolutivo = models.CharField(max_length=50)
 
-    def __str__(self) -> str:
-        return self.tipo
-    
-    class Meta:
-        verbose_name_plural = "Tipos"
-    
-class Estatus(models.Model):
-    tipoEstatus = models.CharField(max_length=20, null=False)
-
-    def __str__(self) -> str:
-        return self.tipoEstatus
-    
-    class Meta:
-        verbose_name_plural = "Estatus"
-    
-class Estado(models.Model):
-    estado = models.CharField(max_length=50, null=False)
-
-    def __str__(self) -> str:
-        return self.estado
-
-class Responsable(models.Model):
-    nombre = models.CharField(max_length=50, null=False)
-    apellidoPat = models.CharField(max_length=50, null=False)
-    apellidoMat = models.CharField(max_length=50, null=False)
-    cargo = models.CharField(max_length=50, null=False)
-    email = models.EmailField(max_length=254, null=False)
-    telefono = models.CharField(max_length=10, null=False)
-
-    def __str__(self) -> str:
-        return self.nombre
-    
-class AutoridadActuante(models.Model):
-    nombre = models.CharField(max_length=50, null=False)
-    apellidoPat = models.CharField(max_length=50, null=False)
-    apellidoMat = models.CharField(max_length=50, null=False)
-    cargo = models.CharField(max_length=50, null=False)
-    email = models.EmailField(max_length=254, null=False)
-    telefono = models.CharField(max_length=10, null=False)
-
-    def __str__(self) -> str:
-        return self.nombre
-    
-
-
-class OficinaRepresentacion(models.Model):
-    identificador = models.CharField(max_length=10, null=False)
-    nombre = models.CharField(max_length=50, null=False)
-    delEstado = models.ForeignKey(Estado, on_delete=models.CASCADE)
-
-OPCION_CLASE_CHOICES=[
-    ('ESTACION','estacion'),
-    ('ESTANCIA','estancia'),
-]
-
-class Estacion(models.Model):
-    identificador = models.CharField(max_length=10, null=False)
-    nombre = models.CharField(max_length=50, null=False)
-    calle = models.CharField(max_length=50, null=False)
-    noext = models.CharField(max_length=5)
-    noint = models.CharField(max_length=5, default='sn')
-    colonia = models.CharField(max_length=50, null=False)
-    cp = models.IntegerField(null=False)
-    poblacion = models.CharField(max_length=50, null= False)
-    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=254, null=False)
-    responsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
-    tipo = models.ForeignKey(Tipos, on_delete=models.CASCADE)
-    clase = models.CharField(verbose_name='Clase estacion', max_length= 20, choices = OPCION_CLASE_CHOICES, default='Estacion')
-    estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE)
-    capacidad = models.IntegerField( null=False)
-    delaOficina = models.ForeignKey(OficinaRepresentacion, on_delete=models.CASCADE)
-    
-    def __str__(self) -> str:
-        return self.nombre
-    
-    class Meta:
-        verbose_name_plural = "Estaciones"
-class Salida(models.Model):
-    tipoSalida = models.CharField(max_length=50)
-    
-    def __str__(self) -> str:
-        return self.tipoSalida
-    
-class Estancia(models.Model):
-    tipoEstancia = models.CharField(max_length=50)
-    
-    def __str__(self) -> str:
-        return self.tipoEstancia
-    
-class Relacion(models.Model):
-    tipoRelacion = models.CharField(max_length=50)
-    
-    def __str__(self) -> str:
-        return self.tipoRelacion
+class Resolucion(models.Model):
+    delaResolucion = models.ForeignKey(TipoResolucion, on_delete=models.CASCADE)
+    fecharesolucion = models.DateField()
+    numeroExpediente = models.CharField(max_length=50)
+    horaResolucion = models.TimeField()
+    deLaEstacion = models.ForeignKey(Estacion, on_delete=models.CASCADE, null=True, blank=True)
+    delResponsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
+    delExtanjero = models.ForeignKey(Extranjero, on_delete=models.CASCADE)
+    fechaNacimiento_DocumentoProvisional = models.DateField()
+    vinculoFamiliar = models.CharField(max_length=50)
+    nombreTestigoUno = models.CharField(max_length=50)
+    apellidoPaternoTestigoUno = models.CharField(max_length=50)
+    apellidoMaternoTestigoUno = models.CharField(max_length=50)
+    firmaTestigoUno = models.BinaryField()
+    huellaTestigoUno = models.BinaryField()
+    nombreTestigoDos = models.CharField(max_length=50)
+    apellidoPaternoTestigoDos = models.CharField(max_length=50)
+    apellidoMaternoTestigoDos = models.CharField(max_length=50)
+    firmaTestigoDos = models.BinaryField()
+    huellaTestigoDos = models.BinaryField()
+    nombreTraductor = models.CharField(max_length=50)
+    apellidoPaternoTraductor = models.CharField(max_length=50)
+    apellidoMaternoTraductor = models.CharField(max_length=50)
+    cargoTraductor = models.CharField(max_length=50)
+    breveDescripcion = models.TextField(null=True, blank = True)
+    alegatos = models.TextField(null=True, blank = True)
+    delaAutoridad = models.ForeignKey(AutoridadActuante, on_delete=models.CASCADE) 
+    numeroOficioDefensoria_COMAR =models.CharField(max_length=50, null=True, blank =True)
+    numeroOficioJuzgado_COMAR =models.CharField(max_length=50, null=True, blank =True)
+    nombreAutoridadJuzgado_COMAR= models.TextField(null=True, blank = True)
+    primerSupuesto_LibreTransito = models.TextField(null=True, blank = True)
+    segundoSupuesto_LibreTransito = models.TextField(null=True, blank = True)
+    fraccionAdecuada = models.TextField(null=True, blank = True)
+    comparecencia_Art133 = models.TextField(null=True, blank = True)
+    agnosRestriccion_Provicional = models.IntegerField()
+    tipoDocumento_Provicional = models.CharField(max_length=50)
+    numeroDocumento_Provicional = models.CharField(max_length=50)
+    documentoAcuerdo= models.FileField(upload_to='files/', null=True, blank=True)
