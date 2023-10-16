@@ -1,53 +1,102 @@
 from django.db import models
-from vigilancia.models import Estacion, Proceso
+
 
 # Create your models here.
-class EntidadDefensora(models.Model):
-    nombreEntidad = models.CharField(max_length=50)
-    nombreTitular = models.CharField(max_length=50)
-    apellidoPaternoTitular = models.CharField(max_length=50)
-    apellidoMaternoTitular = models.CharField(max_length=50)
-    cargoTitular = models.CharField(max_length=50)
-    email1 = models.CharField(max_length=50)
-    email2 = models.CharField(max_length=50)
-    telefono = models.CharField(max_length=20)
-    calle = models.CharField(max_length=50)
-    colonia = models.CharField(max_length=50)
-    municipio = models.CharField(max_length=50)
-    cp = models.CharField(max_length=10)
+class Tipos(models.Model):
+    tipo = models.CharField(max_length=50, null=False)
 
-OPCION_ESTATUSATN_CHOICES=[
-    ('Enviado','activo'),
-    ('Aprobado','inactivo'),
+    def __str__(self) -> str:
+        return self.tipo
+    
+    class Meta:
+        verbose_name_plural = "Tipos"
+    
+class Estatus(models.Model):
+    tipoEstatus = models.CharField(max_length=20, null=False)
+
+    def __str__(self) -> str:
+        return self.tipoEstatus
+    
+    class Meta:
+        verbose_name_plural = "Estatus"
+    
+class Estado(models.Model):
+    estado = models.CharField(max_length=50, null=False)
+
+    def __str__(self) -> str:
+        return self.estado
+
+class Responsable(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    apellidoPat = models.CharField(max_length=50, null=False)
+    apellidoMat = models.CharField(max_length=50, null=False)
+    cargo = models.CharField(max_length=50, null=False)
+    email = models.EmailField(max_length=254, null=False)
+    telefono = models.CharField(max_length=10, null=False)
+
+    def __str__(self) -> str:
+        return self.nombre
+    
+class AutoridadActuante(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    apellidoPat = models.CharField(max_length=50, null=False)
+    apellidoMat = models.CharField(max_length=50, null=False)
+    cargo = models.CharField(max_length=50, null=False)
+    email = models.EmailField(max_length=254, null=False)
+    telefono = models.CharField(max_length=10, null=False)
+
+    def __str__(self) -> str:
+        return self.nombre
+    
+
+
+class OficinaRepresentacion(models.Model):
+    identificador = models.CharField(max_length=10, null=False)
+    nombre = models.CharField(max_length=50, null=False)
+    delEstado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+
+OPCION_CLASE_CHOICES=[
+    ('ESTACION','estacion'),
+    ('ESTANCIA','estancia'),
 ]
 
-class Defensoria(models.Model):
-    delaEstacion = models.ForeignKey(Estacion, on_delete=models.CASCADE)
-    delaEntidad = models.ForeignKey(EntidadDefensora, on_delete=models.CASCADE)
-    delProceso = models.ForeignKey(Proceso, on_delete=models.CASCADE)
-    fechaHora = models.DateTimeField()
-    estatusAtencion = models.CharField(verbose_name='Estatus', max_length=25, choices=OPCION_ESTATUSATN_CHOICES, default='Enviado')
-
-class ListadoPorAsignar(models.Model):
-    delProceso = models.ForeignKey(Proceso, on_delete=models.CASCADE)
-    delaDefensoria = models.ForeignKey(Defensoria, on_delete=models.CASCADE)
-
-class Defensores(models.Model):
-    nombreDefensor = models.CharField(max_length=50)
-    apellidoPaternoDefensor = models.CharField(max_length=50)
-    apellidoMaternoDefensor = models.CharField(max_length=50)
-    cedulaDefensor = models.CharField(max_length=20)
-    telefono = models.CharField(max_length=20)
-    email = models.CharField(max_length=50)
-    delaEntidad = models.ForeignKey(EntidadDefensora, on_delete=models.CASCADE)
-
-class AsignaDefensor(models.Model):
-    delaDefensoria = models.ForeignKey(Defensoria, on_delete=models.CASCADE)
-    fechaHora = models.DateTimeField()
-    oficio = models.FileField(upload_to='files/', verbose_name='Oficio', null=True, blank=True)
-    delDefensor = models.ForeignKey(Defensores, on_delete=models.CASCADE)
-
-class ListadoDefendidos(models.Model):
-    delaAsignacion = models.ForeignKey(AsignaDefensor, on_delete=models.CASCADE)
-    delProceso = models.ForeignKey(Proceso, on_delete=models.CASCADE)
-
+class Estacion(models.Model):
+    identificador = models.CharField(max_length=10, null=False)
+    nombre = models.CharField(max_length=50, null=False)
+    calle = models.CharField(max_length=50, null=False)
+    noext = models.CharField(max_length=5)
+    noint = models.CharField(max_length=5, default='sn')
+    colonia = models.CharField(max_length=50, null=False)
+    cp = models.IntegerField(null=False)
+    poblacion = models.CharField(max_length=50, null= False)
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=254, null=False)
+    responsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
+    tipo = models.ForeignKey(Tipos, on_delete=models.CASCADE)
+    clase = models.CharField(verbose_name='Clase estacion', max_length= 20, choices = OPCION_CLASE_CHOICES, default='Estacion')
+    estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE)
+    capacidad = models.IntegerField( null=False)
+    delaOficina = models.ForeignKey(OficinaRepresentacion, on_delete=models.CASCADE)
+    
+    def __str__(self) -> str:
+        return self.nombre
+    
+    class Meta:
+        verbose_name_plural = "Estaciones"
+class Salida(models.Model):
+    tipoSalida = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.tipoSalida
+    
+class Estancia(models.Model):
+    tipoEstancia = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.tipoEstancia
+    
+class Relacion(models.Model):
+    tipoRelacion = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.tipoRelacion
