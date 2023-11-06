@@ -1,40 +1,116 @@
 from django.db import models
 
+
 # Create your models here.
-OPCION_ESTADOCIVIL_CHOICES=[
-    [0,'Casado(a)'],
-    [1,'Soltero(a)'],
-    [2,'Viudo(a)'],
-    [3,'Divorciado(a)'],
-    [4, 'Separado(a)'],
+class Tipos(models.Model):
+    tipo = models.CharField(max_length=50, null=False)
+
+    def __str__(self) -> str:
+        return self.tipo
+    
+    class Meta:
+        verbose_name_plural = "Tipos"
+    
+class Estatus(models.Model):
+    tipoEstatus = models.CharField(max_length=20, null=False)
+
+    def __str__(self) -> str:
+        return self.tipoEstatus
+    
+    class Meta:
+        verbose_name_plural = "Estatus"
+    
+class Estado(models.Model):
+    estado = models.CharField(max_length=50, null=False)
+
+    def __str__(self) -> str:
+        return self.estado
+    
+class Fiscalia(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    direccion = models.CharField(max_length=100, null=False)
+    correoElectronico = models.CharField(max_length=100, null=False)
+    delEstado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+
+class Consulado(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    direccion = models.CharField(max_length=100, null=False)
+    correoElectronico = models.CharField(max_length=100, null=False)
+
+    def __str__(self) -> str:
+        return self.nombre
+    
+class Responsable(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    apellidoPat = models.CharField(max_length=50, null=False)
+    apellidoMat = models.CharField(max_length=50, null=False)
+    cargo = models.CharField(max_length=50, null=False)
+    email = models.EmailField(max_length=254, null=False)
+    telefono = models.CharField(max_length=10, null=False)
+
+    def __str__(self) -> str:
+        return self.nombre
+    
+class AutoridadActuante(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    apellidoPat = models.CharField(max_length=50, null=False)
+    apellidoMat = models.CharField(max_length=50, null=False)
+    cargo = models.CharField(max_length=50, null=False)
+    email = models.EmailField(max_length=254, null=False)
+    telefono = models.CharField(max_length=10, null=False)
+
+    def __str__(self) -> str:
+        return self.nombre
+    
+
+
+class OficinaRepresentacion(models.Model):
+    identificador = models.CharField(max_length=10, null=False)
+    nombre = models.CharField(max_length=50, null=False)
+    delEstado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+
+OPCION_CLASE_CHOICES=[
+    ('ESTACION','estacion'),
+    ('ESTANCIA','estancia'),
 ]
 
-OPCIONES_ESCOLARIDAD_CHOICES=[
-    [0,'Presscolar'],
-    [1, 'Primaria'],
-    [2, 'Secundaria'],
-    [3, 'Preparatoria'],
-    [4, 'Universidad'],
-]
-
-class Comparecencia(models.Model):
-    fechaComparecencia = models.DateField(verbose_name='Fecha Comparecencia')
-    horaComparecencia = models.DateTimeField(verbose_name='Hora Comparecencia')
-    estadoCivil = models.IntegerField(choices=OPCION_ESTADOCIVIL_CHOICES, verbose_name='Estado Civil')
-    escolaridad = models.IntegerField(choices=OPCIONES_ESCOLARIDAD_CHOICES, verbose_name='Escolaridad')
-    ocupacion = models.CharField(max_length=50, verbose_name='Ocupación')
-    lugarOrigen =models.CharField(max_length=50, verbose_name='Lugar de Origen')
-    calleDomicilioPais = models.CharField(max_length=50, verbose_name='Calle')
-    numeroDomicilioPais = models.IntegerField(verbose_name='Numero')
-    localidadPais = models.CharField(max_length=50, verbose_name='Localidad')
-    domicilioEnMexico = models.BooleanField(verbose_name='Domicilio en México')
-    nombrePadre = models.CharField(max_length=50, verbose_name='Nombre del Padre')
-    apellidoPaternoPadre = models.CharField(max_length=50, verbose_name='Apellido Paterno del Padre')
-    apellidoMaternoPadre = models.CharField(max_length=50, verbose_name='Apellido Materno del Padre')
-    nombreMadre = models.CharField(max_length=50, verbose_name='Nombre de la Madre')
-    apellidoPaternoMadre = models.CharField(max_length=50, verbose_name='Apellido Paterno de la Madre')
-    apellidoMaternoMadre = models.CharField(max_length=50, verbose_name='Apellido Materno de la Madre')
+class Estacion(models.Model):
+    identificador = models.CharField(max_length=10, null=False)
+    nombre = models.CharField(max_length=50, null=False)
+    calle = models.CharField(max_length=50, null=False)
+    noext = models.CharField(max_length=5)
+    noint = models.CharField(max_length=5, default='sn')
+    colonia = models.CharField(max_length=50, null=False)
+    cp = models.IntegerField(null=False)
+    poblacion = models.CharField(max_length=50, null= False)
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=254, null=False)
+    responsable = models.ForeignKey(Responsable, on_delete=models.CASCADE)
+    tipo = models.ForeignKey(Tipos, on_delete=models.CASCADE)
+    clase = models.CharField(verbose_name='Clase estacion', max_length= 20, choices = OPCION_CLASE_CHOICES, default='Estacion')
+    estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE)
+    capacidad = models.IntegerField( null=False)
+    delaOficina = models.ForeignKey(OficinaRepresentacion, on_delete=models.CASCADE)
     
     def __str__(self) -> str:
-        return '__all__'
-
+        return self.nombre
+    
+    class Meta:
+        verbose_name_plural = "Estaciones"
+class Salida(models.Model):
+    tipoSalida = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.tipoSalida
+    
+class Estancia(models.Model):
+    tipoEstancia = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.tipoEstancia
+    
+class Relacion(models.Model):
+    tipoRelacion = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.tipoRelacion
